@@ -7,11 +7,11 @@ OpenCVProcessing::OpenCVProcessing()
 : Node("image_processing")
 {
   subscription_ = this->create_subscription<sensor_msgs::msg::Image>(
-    "/color/image", 10,
+    "/color/image", rclcpp::SensorDataQoS().reliable(),
     std::bind(&OpenCVProcessing::image_callback, this, std::placeholders::_1));
 
   publisher_ = this->create_publisher<sensor_msgs::msg::Image>(
-    "/image_processed", 10);
+    "/image_processed", rclcpp::SensorDataQoS().reliable());
 
   RCLCPP_INFO(this->get_logger(), "Image processing node initialized");
 }
