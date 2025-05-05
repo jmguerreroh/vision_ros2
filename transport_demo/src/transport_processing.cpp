@@ -28,7 +28,7 @@ void TransportProcessing::initialize()
     // - transport_name: the transport to use ("raw", "compressed", etc.)
     // - image_callback: the callback function triggered when a new image is received
     // - rmw_qos_profile_sensor_data: recommended QoS for sensor data (low latency)
-    // - SubscriptionOptions: optional settings like intra-process comm or custom callbacks
+    // - SubscriptionOptions: optional settings like intra-process communication or custom callbacks
     image_sub_ = image_transport::create_subscription(
       node.get(),
       topic_name,
