@@ -23,4 +23,4 @@ private:
 
 }  // namespace opencv_demo
 
-#endif  // OPENCV_DEMO__IMAGE_PROCESSING_HPP_
+#endif  // OPENCV_DEMO__OPENCV_PROCESSING_HPP_
