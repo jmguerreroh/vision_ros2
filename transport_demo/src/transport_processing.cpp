@@ -23,9 +23,10 @@ void TransportProcessing::initialize()
   image_transport::ImageTransport it(node);
   try {
     // Create a subscription to the image topic with the specified transport
+    // - node: the ROS 2 node used to create the subscription
     // - topic_name: the name of the topic to subscribe to
-    // - image_callback: the callback function triggered when a new image is received
     // - transport_name: the transport to use ("raw", "compressed", etc.)
+    // - image_callback: the callback function triggered when a new image is received
     // - rmw_qos_profile_sensor_data: recommended QoS for sensor data (low latency)
     // - SubscriptionOptions: optional settings like intra-process comm or custom callbacks
     image_sub_ = image_transport::create_subscription(
