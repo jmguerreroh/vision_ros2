@@ -13,24 +13,28 @@ TransportProcessing::TransportProcessing()
 
 void TransportProcessing::initialize()
 {
-
+  // Name of the input topic and the transport type to use (e.g., "raw", "compressed", etc.)
   std::string topic_name = "/color/image";
   std::string transport_name = "raw";
+  // Get a shared pointer to the current node instance
   auto node = this->shared_from_this();
 
-  // Initialize the image transport subscriber
+  // Create an ImageTransport object for handling image subscriptions and publications
   image_transport::ImageTransport it(node);
-  image_transport::TransportHints hints(node.get(), transport_name);
   try {
-    auto subscription_options = rclcpp::SubscriptionOptions();
-    // Create a subscription with QoS profile that will be used for the subscription.
+    // Create a subscription to the image topic with the specified transport
+    // - topic_name: the name of the topic to subscribe to
+    // - image_callback: the callback function triggered when a new image is received
+    // - transport_name: the transport to use ("raw", "compressed", etc.)
+    // - rmw_qos_profile_sensor_data: recommended QoS for sensor data (low latency)
+    // - SubscriptionOptions: optional settings like intra-process comm or custom callbacks
     image_sub_ = image_transport::create_subscription(
       node.get(),
       topic_name,
       std::bind(&TransportProcessing::image_callback, this, std::placeholders::_1),
-      hints.getTransport(),
+      transport_name,
       rmw_qos_profile_sensor_data,
-      subscription_options);
+      rclcpp::SubscriptionOptions());
     RCLCPP_INFO(
       node->get_logger(), "Image received: unwrapping using '%s' transport.",
       image_sub_.getTransport().c_str());
@@ -41,7 +45,8 @@ void TransportProcessing::initialize()
     return;
   }
 
-  // Initialize the image transport publisher
+  // Advertise a publisher for processed images on the "image_processed" topic
+  // The number 1 is the publisher queue size
   image_pub_ = it.advertise("image_processed", 1);
 }
 
