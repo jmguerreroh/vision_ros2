@@ -22,9 +22,15 @@ void PCLProcessing::pcl_callback(const sensor_msgs::msg::PointCloud2::SharedPtr 
   pcl::fromROSMsg(*msg, pointcloud);
 
   // Process the point cloud (e.g., filtering, segmentation, etc.)
-  // For demonstration, we will just publish the same point cloud
+  pcl::PointCloud<pcl::PointXYZRGB> filtered_cloud;
+  for (const auto & point : pointcloud.points) {
+    if (point.z < 0.8) {  // Example condition: filter points with z < 0.8
+      filtered_cloud.push_back(point);
+    }
+  }
+
   sensor_msgs::msg::PointCloud2 output;
-  pcl::toROSMsg(pointcloud, output);
+  pcl::toROSMsg(filtered_cloud, output);
   output.header = msg->header;  // Preserve the original header
   publisher_->publish(output);
 }
